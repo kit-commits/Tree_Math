@@ -14,7 +14,7 @@ Formula:
 This repository includes a small calculator script:
 
 ```bash
-python /tmp/workspace/kit-commits/Tree_Math/tree_fall_time.py \
+python tree_fall_time.py \
   --heard-time "2026-06-08T10:00:00" \
   --distance-meters 686
 ```
