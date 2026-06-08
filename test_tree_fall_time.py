@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import io
 import unittest
-from contextlib import redirect_stderr
+from contextlib import redirect_stderr, redirect_stdout
 from datetime import datetime
 from unittest.mock import patch
 
@@ -31,6 +31,26 @@ class TreeFallTimeTests(unittest.TestCase):
 
         self.assertEqual(exit_context.exception.code, 2)
         self.assertIn("must be a valid ISO 8601 timestamp", stderr.getvalue())
+
+    def test_estimate_tree_fall_time_rejects_negative_distance(self) -> None:
+        with self.assertRaises(ValueError):
+            estimate_tree_fall_time(datetime.now(), -1)
+
+    def test_main_prints_estimated_time_for_valid_input(self) -> None:
+        stdout = io.StringIO()
+        with patch(
+            "sys.argv",
+            [
+                "tree_fall_time.py",
+                "--heard-time",
+                "2026-06-08T10:00:00",
+                "--distance-meters",
+                "343",
+            ],
+        ), redirect_stdout(stdout):
+            main()
+
+        self.assertIn("Estimated tree fall time: 2026-06-08T09:59:59", stdout.getvalue())
 
 
 if __name__ == "__main__":
